@@ -8,8 +8,8 @@ import VueAxios from 'vue-axios';
 global.api = api;
 Vue.config.productionTip = false
 const axiosInstance = axios.create({
-  baseURL: `http://localhost:3000/`,
-  // baseURL: `http://18.206.159.27:3000/`,
+  // baseURL: `http://localhost:3000/`,
+  baseURL: `http://18.206.159.27:3000/`,
   timeout: 20000
 });
 
