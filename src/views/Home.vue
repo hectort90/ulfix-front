@@ -1,18 +1,78 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <v-row>
+      <v-col>
+        <h1 class="text-center">Bienvenido a Ulfix Fullstack Mini Project</h1>
+        <v-card width="600" class="mx-auto mt-5">
+          <v-card-title>
+            <h4>Para entrar a la plataforma ingresa tu usuario y contraseña</h4>
+          </v-card-title>
+          <v-card-text>
+            <v-form v-model="valid" ref="form">
+              <v-text-field
+                  label="Usuario"
+                  prepend-icon="mdi-account-circle"
+                  v-model="email"
+                  required
+                  :rules="usernameAndPasswordRules"
+              />
+              <v-text-field
+                  label="Contraseña"
+                  :type="showPassword ? 'text' : 'password'"
+                  prepend-icon="mdi-lock"
+                  :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                  @click:append="showPassword = !showPassword"
+                  v-model="password"
+                  required
+                  :rules="usernameAndPasswordRules"
+                  @keypress.enter="login"
+              />
+              <p class="text-center red--text">{{error}}</p>
+            </v-form>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn color="success" :to="{name: 'AddUser'}">Registrarse</v-btn>
+            <v-spacer/>
+            <v-btn color="info" @click="login" :loading="isLoading">Login</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
 export default {
-  name: 'Home',
-  components: {
-    HelloWorld
+  name: "Login",
+  data() {
+    return {
+      person: '',
+      valid: false,
+      isLoading: false,
+      email: 'test@gmail.com',
+      usernameAndPasswordRules: [
+        v => !!v || 'El campo es requerido'
+      ],
+      password: 'Test',
+      showPassword: false,
+      error: ''
+    }
+  },
+  methods: {
+    login() {
+      global.api.login(this.email, this.password).then(res => {
+        this.isLoading = false;
+        localStorage.setItem('ulfix', res.data);
+        this.$router.push({name: 'Users'})
+      }).catch(err => {
+        this.isLoading = false;
+        this.error = err.response;
+      })
+    }
   }
 }
 </script>
+
+<style scoped>
+
+</style>
