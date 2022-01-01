@@ -95,18 +95,36 @@ export default {
       global.api.updateUser(this.userId, this.user.name, this.user.email).then(res => {
         this.$router.push({name: 'Users'})
         console.log(res.data)
+      }).catch(err => {
+        switch (err.response.status) {
+          case 401:
+            this.$router.push({name: 'Home'})
+            break;
+        }
       })
     },
     eraseUser() {
         global.api.deleteUser(this.userId).then(() => {
           this.dialog = false;
           this.$router.push({name: 'Home'})
+        }).catch(err => {
+          switch (err.response.status) {
+            case 401:
+              this.$router.push({name: 'Home'})
+              break;
+          }
         })
     }
   },
   created() {
     global.api.getUser(this.userId).then(res => {
       this.user = res.data;
+    }).catch(err => {
+      switch (err.response.status) {
+        case 401:
+          this.$router.push({name: 'Home'})
+          break;
+      }
     })
   }
 }

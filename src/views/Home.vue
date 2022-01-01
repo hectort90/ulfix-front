@@ -2,22 +2,22 @@
   <div class="home">
     <v-row>
       <v-col>
-        <h1 class="text-center">Bienvenido a Ulfix Fullstack Mini Project</h1>
+        <h1 class="text-center">Welcome to Ulfix Fullstack Mini Project</h1>
         <v-card width="600" class="mx-auto mt-5">
           <v-card-title>
-            <h4>Para entrar a la plataforma ingresa tu usuario y contraseña</h4>
+            <h4>To enter the platform please enter your credentials</h4>
           </v-card-title>
           <v-card-text>
             <v-form v-model="valid" ref="form">
               <v-text-field
-                  label="Usuario"
+                  label="User"
                   prepend-icon="mdi-account-circle"
                   v-model="email"
                   required
                   :rules="usernameAndPasswordRules"
               />
               <v-text-field
-                  label="Contraseña"
+                  label="Password"
                   :type="showPassword ? 'text' : 'password'"
                   prepend-icon="mdi-lock"
                   :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
@@ -31,7 +31,7 @@
             </v-form>
           </v-card-text>
           <v-card-actions>
-            <v-btn color="success" :to="{name: 'AddUser'}">Registrarse</v-btn>
+            <v-btn color="success" :to="{name: 'AddUser'}">Register</v-btn>
             <v-spacer/>
             <v-btn color="info" @click="login" :loading="isLoading">Login</v-btn>
           </v-card-actions>
@@ -65,8 +65,11 @@ export default {
         localStorage.setItem('ulfix', res.data);
         this.$router.push({name: 'Users'})
       }).catch(err => {
-        this.isLoading = false;
-        this.error = err.response;
+        switch (err.response.status) {
+          case 401:
+            this.error = "Wrong user or password";
+            break;
+        }
       })
     }
   }

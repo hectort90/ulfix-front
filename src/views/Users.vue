@@ -62,6 +62,12 @@ export default {
   created() {
     global.api.getAllUsers().then(res => {
       this.users = res.data;
+    }).catch(err => {
+      switch (err.response.status) {
+        case 401:
+          this.$router.push({name: 'Home'})
+          break;
+      }
     })
   }
 }
